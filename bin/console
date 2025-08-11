@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Application;
+
+use function oihana\init\initContainer;
+use function oihana\init\initDefinitions;
+
+const __APP__         = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR ;
+const __CONFIG__      = __APP__ .  'config' ;
+const __DEFINITIONS__ = __APP__ .  'definitions' ;
+
+require_once __APP__ . 'vendor/autoload.php' ;
+
+try
+{
+    $container   = initContainer( initDefinitions( __DEFINITIONS__ ) ) ;
+    $application = $container->get( Application::class ) ;
+    $application->run();
+}
+catch ( Exception | InvalidArgumentException $exception )
+{
+    echo 'Failed ' . $exception->getCode() . ' | ' . $exception->getMessage() ;
+}

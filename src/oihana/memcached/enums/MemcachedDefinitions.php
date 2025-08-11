@@ -1,0 +1,24 @@
+<?php
+
+namespace oihana\memcached\enums;
+
+use oihana\reflections\traits\ConstantsTrait;
+
+/**
+ * Enumeration of memcached command definitions keys.
+ *
+ * @package oihana\enums
+ * @author  Marc Alcaraz (ekameleon)
+ * @since   1.0.0
+ */
+class MemcachedDefinitions
+{
+    use ConstantsTrait ;
+
+    const string APP_PATH    = 'appPath'    ;
+    const string COMMAND     = 'command'    ;
+    const string COMMANDS    = 'commands'   ;
+    const string CONFIG      = 'config'     ;
+    const string CONFIG_PATH = 'configPath' ;
+    const string MEMCACHED   = 'memcached'  ;
+}

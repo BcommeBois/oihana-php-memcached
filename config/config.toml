@@ -1,0 +1,48 @@
+###########################################################
+#                Memcached Scripts - Config               #
+###########################################################
+
+###### Application Settings
+
+name        = "oihana-php-memcached"
+description = "The Memcached command"
+author      = "Agence OOOP"
+license     = "MPL-2.0"
+locale      = "fr_FR"
+version     = "1.0.0"
+next        = "2.0.0"
+debug       = true
+loggable    = true
+memoryLimit = "256M"
+timezone    = "Europe/Paris"
+
+###### Command Settings
+
+[command]
+clearable = false       # Clear the command at launch
+sudo      = false       # Grant sudo privileges for all commands
+owner     = "www-data"  # If sudo=true -> sudo -u=owner
+
+[memcached]
+enabled = true
+host    = "localhost"
+port    = 11211
+
+[errors]
+display_errors         = "On"
+display_startup_errors = "On"
+error_log              = "logs/php-error.log"
+error_reporting        = 32767
+# ----------------------------------------------------
+# Error reporting constants
+# ----------------------------------------------------
+# E_ALL                                      | 32767 |
+# E_ERROR                                    |     1 |
+# E_WARNING                                  |     2 |
+# E_PARSE                                    |     4 |
+# E_NOTICE                                   |     8 |
+# E_DEPRECATED                               |  8192 |
+# E_USER_DEPRECATED                          | 16384 |
+# E_ALL & ~E_DEPRECATED                      | 24575 |
+# E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED |  8191 |
+# ----------------------------------------------------
