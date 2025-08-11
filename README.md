@@ -14,11 +14,21 @@ A PHP library for managing Memcached, built on top of the Oihana project librari
 
 Install via [Composer](https://getcomposer.org):
 
+### 
 ```shell
 composer require oihana/php-memcached
 ```
 
 ## 🚀 Quick Start
+
+### Initial setup
+
+To run the memcached command locally, you need to create the configuration file `config/config.toml`. 
+
+You can do this by copying and editing the example config:
+```bash
+cp config/config.example.toml config/config.toml
+```
 
 ### List Memcached info
 
