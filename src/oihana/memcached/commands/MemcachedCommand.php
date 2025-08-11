@@ -52,11 +52,6 @@ use function oihana\commands\helpers\clearConsole;
  * bin/console command:memcached --flush
  * ```
  *
- * @example Flush with verbose output
- * ```php
- * bin/console command:memcached --flush -v
- * ```
- *
  * @example Clear the console before running, then display stats
  * ```php
  * bin/console command:memcached --clear
@@ -122,9 +117,13 @@ class MemcachedCommand extends Kernel
         [ $io , $timestamp ] = $this->startCommand( $input , $output );
 
         $flush = $input->getOption( Method::flush );
-        if ( $flush === true ) {
+
+        if ( $flush === true )
+        {
             $status = $this->flush( $input , $output );
-        } else {
+        }
+
+        else {
             $status = $this->stats( $input , $output );
         }
 
@@ -141,11 +140,6 @@ class MemcachedCommand extends Kernel
      * bin/console command:memcached --flush
      * ```
      *
-     * @example Flush with verbose output
-     * ```php
-     * bin/console command:memcached --flush -v
-     * ```
-     *
      * @package oihana\memcached\commands
      * @author  Marc Alcaraz (ekameleon)
      * @since   1.0.0
@@ -156,15 +150,19 @@ class MemcachedCommand extends Kernel
 
         $io->section( 'Flush the cache' );
 
-        try {
+        try
+        {
             $code = $this->memcachedFlush();
 
-            if ( $code == Memcached::RES_SUCCESS ) {
+            if ( $code == Memcached::RES_SUCCESS )
+            {
                 $io->success( "[✓] Flush operation succeeded" );
             }
 
             return $code;
-        } catch ( Throwable $exception ) {
+        }
+        catch ( Throwable $exception )
+        {
             $io->error( sprintf( '[!] The command failed,  %s' , $exception->getMessage() ) );
             return ExitCode::FAILURE;
         }
