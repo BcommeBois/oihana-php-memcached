@@ -24,14 +24,53 @@ composer require oihana/php-system
 List the memcache information
 ```
 bin/console command:memcached
+
+Command:memcached
+=================
+
+localhost:11211
+---------------
+
++--------------------+-------+
+| Name               | Value |
++--------------------+-------+
+| Current cache size | 0 MB  |
+| Cache used         | 0 %   |
++--------------------+-------+
+
+✅  Done in 5 ms
+----------------
+
+ Thank you and see you soon!
 ```
 
 List all the memcache information
 ```
-bin/console command:memcached --verbose
-
-# or
 bin/console command:memcached -v
+
+Command:memcached
+=================
+
+localhost:11211
+---------------
+
++---------------------+-------+
+| Name                | Value |
++---------------------+-------+
+| Current cache size  | 0 MB  |
+| Cache used          | 0 %   |
+| Maximum cache size  | 64 MB |
+| Total items         | 0     |
+| Current connections | 2     |
+| Total connections   | 10    |
+| Get operations      | 0     |
+| Set operations      | 0     |
++---------------------+-------+
+
+✅  Done in 6 ms
+----------------
+
+ Thank you and see you soon!
 ```
 
 ### flush memcache
@@ -39,6 +78,17 @@ bin/console command:memcached -v
 Flush the memcache 
 ```
 bin/console command:memcached --flush
+
+Command:memcached
+=================
+
+Flush the cache
+---------------
+                                                                                                                        
+ [OK] [✓] Flush operation succeed                                                                                       
+                                                                                                                        
+✅  Done in 4 ms
+----------------
 ```
 
 ## ✅ Running Unit Tests

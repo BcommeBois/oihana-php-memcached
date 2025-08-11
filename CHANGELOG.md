@@ -17,6 +17,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Adds oihana\memcached\enums\MemcachedStats
 
 - Adds oihana\memcached\traits\MemcachedTrait
-
-
-
