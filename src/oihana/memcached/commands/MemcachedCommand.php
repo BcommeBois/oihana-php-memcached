@@ -105,8 +105,8 @@ class MemcachedCommand extends Kernel
      */
     protected function configure() : void
     {
-        $this->addOption( CommandOption::CLEAR , null , InputOption::VALUE_NONE , 'Clear the console.' );
-        $this->addOption( Method::flush , null , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
+        $this->addOption( CommandOption::CLEAR  , 'c' , InputOption::VALUE_NONE , 'Clear the console.' );
+        $this->addOption( Method::flush         , 'f' , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
     }
 
     /**
@@ -145,6 +145,10 @@ class MemcachedCommand extends Kernel
      * ```php
      * bin/console command:memcached --flush -v
      * ```
+     *
+     * @package oihana\memcached\commands
+     * @author  Marc Alcaraz (ekameleon)
+     * @since   1.0.0
      */
     public function flush( InputInterface $input , OutputInterface $output ) : int
     {
@@ -156,7 +160,7 @@ class MemcachedCommand extends Kernel
             $code = $this->memcachedFlush();
 
             if ( $code == Memcached::RES_SUCCESS ) {
-                $io->success( "[✓] Flush operation succeed" );
+                $io->success( "[✓] Flush operation succeeded" );
             }
 
             return $code;

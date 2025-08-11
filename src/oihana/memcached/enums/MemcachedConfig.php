@@ -7,7 +7,7 @@ use oihana\reflections\traits\ConstantsTrait;
 /**
  * Enumeration of memcached command config keys.
  *
- * @package oihana\enums
+ * @package oihana\memcached\enums
  * @author  Marc Alcaraz (ekameleon)
  * @since   1.0.0
  */

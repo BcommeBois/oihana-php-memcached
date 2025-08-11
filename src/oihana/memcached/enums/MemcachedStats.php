@@ -33,7 +33,7 @@ use oihana\reflections\traits\ConstantsTrait;
  *
  * @see https://github.com/memcached/memcached/wiki/Commands#stats
  *
- * @package oihana\enums
+ * @package oihana\memcached\enums
  * @author  Marc Alcaraz (ekameleon)
  * @since   1.0.0
  */

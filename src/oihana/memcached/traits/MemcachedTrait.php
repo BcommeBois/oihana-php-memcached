@@ -18,6 +18,50 @@ use function oihana\core\maths\roundValue;
 
 /**
  * The memcached trait helper.
+ *
+ * This trait provides convenient methods to interact with a Memcached client,
+ * including flushing the cache and retrieving detailed cache statistics.
+ *
+ * @package oihana\memcached\traits
+ * @author  Marc Alcaraz (ekameleon)
+ * @since   1.0.0
+ *
+ * @example
+ * ```php
+ * use oihana\memcached\traits\MemcachedTrait;
+ * use Memcached;
+ *
+ * class CacheManager
+ * {
+ *     use MemcachedTrait;
+ *
+ *     public function __construct( string $host = 'localhost' , int $port = 11211 )
+ * {
+ *         $this->memcached = new Memcached();
+ *         $this->memcached->addServer( $host , $port ) ;
+ *     }
+ * }
+ *
+ * $cache = new CacheManager();
+ *
+ * // Flush cache and check result code
+ * $resultCode = $cache->memcachedFlush();
+ * echo "Flush result code: " . $resultCode . PHP_EOL;
+ *
+ * // Get basic cache stats (non verbose)
+ * $statsList = $cache->memcachedStats();
+ * foreach ($statsList->itemListElement as $dataset)
+ * {
+ *     echo $dataset->{Prop::NAME} . PHP_EOL;
+ * }
+ *
+ * // Get verbose cache stats
+ * $verboseStatsList = $cache->memcachedStats(true);
+ * foreach ($verboseStatsList->itemListElement as $dataset)
+ * {
+ *     echo $dataset->{Prop::NAME} . PHP_EOL;
+ * }
+ * ```
  */
 trait MemcachedTrait
 {
@@ -42,6 +86,15 @@ trait MemcachedTrait
 
     /**
      * Flush the memcached cache.
+     *
+     * @return int Returns the Memcached result code after flush operation.
+     *
+     * @example
+     * ```php
+     * $cacheManager = new CacheManager();
+     * $result = $cacheManager->memcachedFlush();
+     * echo "Flush operation result code: $result";
+     * ```
      */
     public function memcachedFlush() : int
     {
@@ -51,6 +104,16 @@ trait MemcachedTrait
 
     /**
      * Returns the statistics of the memcached cache.
+     *
+     * @param bool $verbose If true, includes detailed stats; otherwise, returns basic stats.
+     * @return ItemList Returns an ItemList object containing cache statistics.
+     *
+     * @example
+     * ```php
+     * $cacheManager = new CacheManager();
+     * $basicStats = $cacheManager->memcachedStats(false);
+     * $verboseStats = $cacheManager->memcachedStats(true);
+     * ```
      */
     public function memcachedStats( bool $verbose = false ) : ItemList
     {
@@ -89,8 +152,16 @@ trait MemcachedTrait
 
     /**
      * Indicates the cache used information.
-     * @param float|int $cacheUsed
-     * @return PropertyValue
+     *
+     * @param float|int $cacheUsed Cache usage percentage.
+     * @return PropertyValue PropertyValue describing cache usage.
+     *
+     * @example
+     * ```php
+     * $cacheUsage = 75.5;
+     * $cacheUsedProp = $cacheManager->cacheUsed($cacheUsage);
+     * echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%';
+     * ```
      */
     public function cacheUsed( float|int $cacheUsed ) :PropertyValue
     {

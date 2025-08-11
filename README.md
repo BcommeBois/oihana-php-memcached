@@ -2,7 +2,7 @@
 
 ![Oihana PHP System](https://raw.githubusercontent.com/BcommeBois/oihana-php-memcached/main/assets/images/oihana-php-memcached-logo-inline-512x160.png)
 
-PHP library for managing MemCached, built on top of the Oihana project libraries (oihana-php-commands, etc.).
+A PHP library for managing Memcached, built on top of the Oihana project libraries (such as oihana-php-commands).
 
 [![Latest Version](https://img.shields.io/packagist/v/oihana/php-memcached.svg?style=flat-square)](https://packagist.org/packages/oihana/php-memcached)  
 [![Total Downloads](https://img.shields.io/packagist/dt/oihana/php-memcached.svg?style=flat-square)](https://packagist.org/packages/oihana/php-memcached)  
@@ -13,18 +13,22 @@ PHP library for managing MemCached, built on top of the Oihana project libraries
 > **Requires [PHP 8.4+](https://php.net/releases/)**
 
 Install via [Composer](https://getcomposer.org):
-```bash
-composer require oihana/php-system
+
+```shell
+composer require oihana/php-memcached
 ```
 
 ## 🚀 Quick Start
 
-### List memcache
+### List Memcached info
 
-List the memcache information
-```
+Display basic Memcached information:
+```shell
 bin/console command:memcached
+```
 
+Example output:
+```shell
 Command:memcached
 =================
 
@@ -44,10 +48,15 @@ localhost:11211
  Thank you and see you soon!
 ```
 
-List all the memcache information
-```
-bin/console command:memcached -v
+### List detailed Memcached info
 
+Display full Memcached statistics:
+```shell
+bin/console command:memcached -v
+```
+
+Example output:
+```shell
 Command:memcached
 =================
 
@@ -73,32 +82,48 @@ localhost:11211
  Thank you and see you soon!
 ```
 
-### flush memcache
+### Flush Memcached cache
 
-Flush the memcache 
-```
+Clear the entire Memcached cache:
+```shell
 bin/console command:memcached --flush
+```
 
+Example output:
+```shell
 Command:memcached
 =================
 
 Flush the cache
 ---------------
                                                                                                                         
- [OK] [✓] Flush operation succeed                                                                                       
+ [OK] [✓] Flush operation succeeded                                                                                       
                                                                                                                         
 ✅  Done in 4 ms
 ----------------
 ```
 
+### Use composer
+
+You can run a composer script:  
+```shell
+composer memcache
+composer memcache -- -v
+composer memcache -- --verbose
+
+composer memcache -- -f
+composer memcache -- --flush 
+```
+
+
 ## ✅ Running Unit Tests
 
 To run all tests:
 ```bash
-composer run-script test
+composer test
 ```
 
-## 🧾 Licence
+## 🧾 License
 
 This project is licensed under the [Mozilla Public License 2.0 (MPL-2.0)](https://www.mozilla.org/en-US/MPL/2.0/).
 
