@@ -11,6 +11,24 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.2] - 2025-08-12
+
+### Added
+
+- Creates the MemcachedInfoTrait to isolate methods to generate detailed Memcached statistics.
+- Adds CRUD methods in the oihana\memcached\traits\MemcachedTrait
+  - memcachedDecrement
+  - memcachedDelete
+  - memcachedGet
+  - memcachedGetAllKeys
+  - memcachedHitRatio
+  - memcachedIncrement
+  - memcachedKeyExists
+  - memcachedSet
+  - memcachedTouch
+  - memcachedUptime
+ 
+
 ## [1.0.0] - 2025-08-11
 
 ### Added

@@ -186,7 +186,6 @@ trait MemcachedTrait
         return $this->memcached->getAllKeys() ?: [];
     }
 
-
     /**
      * Calculate the cache hit ratio in percentage.
      *
