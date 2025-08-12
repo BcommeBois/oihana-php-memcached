@@ -10,9 +10,6 @@ use oihana\memcached\enums\MemcachedStats;
 use org\schema\constants\Prop;
 use org\schema\creativeWork\Dataset;
 use org\schema\ItemList;
-use org\schema\PropertyValue;
-use org\unece\uncefact\MeasureCode;
-use org\unece\uncefact\MeasureName;
 
 use function oihana\core\maths\roundValue;
 
@@ -65,6 +62,8 @@ use function oihana\core\maths\roundValue;
  */
 trait MemcachedTrait
 {
+    use MemcachedInfoTrait ;
+
     /**
      * The memcached client reference.
      * @var Memcached|null
@@ -73,7 +72,9 @@ trait MemcachedTrait
 
     /**
      * Assert the existence of the memcached property.
+     *
      * @return void
+     *
      * @throws UnexpectedValueException If the memcached property is not set.
      */
     protected function assertMemCached():void
@@ -85,9 +86,11 @@ trait MemcachedTrait
     }
 
     /**
-     * Flush the memcached cache.
+     * Flush the entire memcached cache.
      *
      * @return int Returns the Memcached result code after flush operation.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
      *
      * @example
      * ```php
@@ -98,15 +101,192 @@ trait MemcachedTrait
      */
     public function memcachedFlush() : int
     {
+        $this->assertMemCached();
         $this->memcached->flush() ;
         return $this->memcached->getResultCode() ;
+    }
+
+
+    /**
+     * Decrement a numeric cache value.
+     *
+     * @param string $key    The cache key.
+     * @param int    $offset Decrement amount.
+     *
+     * @return int|false The new value, or false on failure.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $cacheManager->memcachedDecrement('counter', 1);
+     * ```
+     */
+    public function memcachedDecrement(string $key, int $offset = 1): int|false
+    {
+        $this->assertMemCached();
+        return $this->memcached->decrement($key, $offset);
+    }
+
+    /**
+     * Delete a key from cache.
+     *
+     * @param string $key The cache key.
+     *
+     * @return bool True on success, false on failure.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $cacheManager->memcachedDelete( 'user_123' ) ;
+     * ```
+     */
+    public function memcachedDelete(string $key): bool
+    {
+        $this->assertMemCached();
+        return $this->memcached->delete( $key ) ;
+    }
+
+    /**
+     * Get a value from cache.
+     *
+     * @param string $key The cache key.
+     *
+     * @return mixed The cached value, or false if not found.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $value = $cacheManager->memcachedGet('user_123');
+     * ```
+     */
+    public function memcachedGet( string $key ): mixed
+    {
+        $this->assertMemCached();
+        return $this->memcached->get( $key );
+    }
+
+    /**
+     * Get all cache keys (if supported by server).
+     *
+     * @return array List of keys.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $keys = $cacheManager->memcachedGetAllKeys();
+     * ```
+     */
+    public function memcachedGetAllKeys(): array
+    {
+        $this->assertMemCached();
+        return $this->memcached->getAllKeys() ?: [];
+    }
+
+
+    /**
+     * Calculate the cache hit ratio in percentage.
+     *
+     * @return float Cache hit ratio.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $ratio = $cacheManager->memcachedHitRatio();
+     * ```
+     */
+    public function memcachedHitRatio(): float
+    {
+        $this->assertMemCached();
+        $stats = $this->memcached->getStats();
+        foreach ( $stats as $server )
+        {
+            $hits   = $server[ MemcachedStats::GET_HITS   ] ?? 0 ;
+            $misses = $server[ MemcachedStats::GET_MISSES ] ?? 0 ;
+            $total  = $hits + $misses;
+            return $total > 0 ? round(($hits / $total) * 100, 2) : 0.0;
+        }
+        return 0.0;
+    }
+
+    /**
+     * Increment a numeric cache value.
+     *
+     * @param string $key    The cache key.
+     * @param int    $offset Increment amount.
+     *
+     * @return int|false The new value, or false on failure.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $cacheManager->memcachedIncrement('counter', 2);
+     * ```
+     */
+    public function memcachedIncrement( string $key , int $offset = 1 ): int|false
+    {
+        $this->assertMemCached();
+        return $this->memcached->increment($key, $offset);
+    }
+
+    /**
+     * Check if a cache key exists.
+     *
+     * @param string $key The cache key.
+     * @return bool True if exists, false otherwise.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * if ( $cacheManager->memcachedKeyExists( 'foo' ) )
+     * {
+     *     echo "Exists";
+     * }
+     * ```
+     */
+    public function memcachedKeyExists(string $key): bool
+    {
+        $this->assertMemCached();
+        $this->memcached->get($key);
+        return $this->memcached->getResultCode() !== Memcached::RES_NOTFOUND;
+    }
+
+    /**
+     * Store a value in cache.
+     *
+     * @param string $key  The cache key.
+     * @param mixed $value The value to store.
+     * @param int   $ttl   Time-to-live in seconds.
+     *
+     * @return bool True on success, false on failure.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $cacheManager->memcachedSet( 'user_123' , ['name' => 'John'] , 3600 ) ;
+     * ```
+     */
+    public function memcachedSet( string $key, mixed $value, int $ttl = 0 ): bool
+    {
+        $this->assertMemCached();
+        return $this->memcached->set( $key , $value , $ttl);
     }
 
     /**
      * Returns the statistics of the memcached cache.
      *
      * @param bool $verbose If true, includes detailed stats; otherwise, returns basic stats.
+     *
      * @return ItemList Returns an ItemList object containing cache statistics.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
      *
      * @example
      * ```php
@@ -117,6 +297,8 @@ trait MemcachedTrait
      */
     public function memcachedStats( bool $verbose = false ) : ItemList
     {
+        $this->assertMemCached();
+
         $list = new ItemList() ;
 
         $stats = $this->memcached->getStats() ;
@@ -126,6 +308,8 @@ trait MemcachedTrait
             $cacheSize    = $server[ MemcachedStats::BYTES ] / ( 1024 * 1024 );
             $maxCacheSize = roundValue( $server[ MemcachedStats::LIMIT_MAX_BYTES ] / ( 1024 * 1024 ) , 5 );
             $cacheUsed    = roundValue( $cacheSize / $maxCacheSize * 100 , 5 ) ;
+
+            $variables = [] ;
 
             $variables[] = $this->currentCacheSize( $cacheSize , $maxCacheSize ) ;
             $variables[] = $this->cacheUsed( $cacheUsed ) ;
@@ -151,149 +335,46 @@ trait MemcachedTrait
     }
 
     /**
-     * Indicates the cache used information.
+     * Change the expiration time of an existing key.
      *
-     * @param float|int $cacheUsed Cache usage percentage.
-     * @return PropertyValue PropertyValue describing cache usage.
+     * @param string $key The cache key.
+     * @param int $ttl New TTL in seconds.
+     * @return bool True on success, false on failure.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
      *
      * @example
      * ```php
-     * $cacheUsage = 75.5;
-     * $cacheUsedProp = $cacheManager->cacheUsed($cacheUsage);
-     * echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%';
+     * $cacheManager->memcachedTouch('session_abc', 600);
      * ```
      */
-    public function cacheUsed( float|int $cacheUsed ) :PropertyValue
+    public function memcachedTouch(string $key, int $ttl): bool
     {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Cache used',
-            Prop::DESCRIPTION => 'Cache used in percentage',
-            Prop::VALUE       => $cacheUsed ,
-            Prop::UNIT_CODE   => MeasureCode::PERCENT ,
-            Prop::UNIT_TEXT   => MeasureName::PERCENT ,
-        ]);
+        $this->assertMemCached();
+        return $this->memcached->touch($key, $ttl);
     }
 
     /**
-     * Indicates the current cache size information.
-     * @param int|float $cacheSize
-     * @param int|float $maxCacheSize
-     * @return PropertyValue
+     * Get memcached server uptime in seconds.
+     *
+     * @return int Uptime in seconds.
+     *
+     * @throws UnexpectedValueException If the memcached property is not set.
+     *
+     * @example
+     * ```php
+     * $uptime = $cacheManager->memcachedUptime();
+     * ```
      */
-    public function currentCacheSize( int|float $cacheSize , int|float $maxCacheSize ) :PropertyValue
+    public function memcachedUptime(): int
     {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Current cache size' ,
-            Prop::DESCRIPTION => "Current size of the cache in megabytes",
-            Prop::VALUE       => $cacheSize ,
-            Prop::UNIT_CODE   => MeasureCode::MEGABYTE ,
-            Prop::UNIT_TEXT   => MeasureName::MEGABYTE ,
-            Prop::MAX_VALUE   => $maxCacheSize
-        ]);
-    }
-
-    /**
-     * Indicates the number of current connections.
-     * @param array $server
-     * @return PropertyValue
-     */
-    public function currentConnections( array $server ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Current connections',
-            Prop::DESCRIPTION => 'Number of current connections',
-            Prop::VALUE       => $server[ MemcachedStats::CURR_CONNECTIONS ] ?? 0 ,
-            Prop::UNIT_CODE   => MeasureCode::UNIT ,
-            Prop::UNIT_TEXT   => MeasureName::UNIT ,
-        ]);
-    }
-
-    /**
-     * Indicates the maximum size of the cache in megabytes.
-     * @param int|float $maxCacheSize
-     * @return PropertyValue
-     */
-    public function maxCacheSize( int|float $maxCacheSize ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Maximum cache size' ,
-            Prop::DESCRIPTION => "Maximum size of the cache in megabytes",
-            Prop::VALUE       => $maxCacheSize ,
-            Prop::UNIT_CODE   => MeasureCode::MEGABYTE ,
-            Prop::UNIT_TEXT   => MeasureName::MEGABYTE ,
-        ]);
-    }
-
-    /**
-     * Indicates the total number of connections.
-     * @param array $server
-     * @return PropertyValue
-     */
-    public function totalConnections( array $server ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Total connections',
-            Prop::DESCRIPTION => 'Total number of connections',
-            Prop::VALUE       => $server[ MemcachedStats::TOTAL_CONNECTIONS ] ?? 0 ,
-            Prop::UNIT_CODE   => MeasureCode::UNIT ,
-            Prop::UNIT_TEXT   => MeasureName::UNIT ,
-        ]) ;
-    }
-
-    /**
-     * Indicates the total number of get operations.
-     * @param array $server
-     * @return PropertyValue
-     */
-    public function totalGets( array $server ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Get operations',
-            Prop::DESCRIPTION => 'Total number of get operations',
-            Prop::VALUE       => $server[ MemcachedStats::CMD_GET ] ?? 0  ,
-            Prop::UNIT_CODE   => MeasureCode::UNIT ,
-            Prop::UNIT_TEXT   => MeasureName::UNIT ,
-        ]) ;
-    }
-
-    /**
-     * Indicates the total number of items stored in the cache.
-     * @param array $server
-     * @return PropertyValue
-     */
-    public function totalItems( array $server ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Total items',
-            Prop::DESCRIPTION => 'Total number of items stored in the cache',
-            Prop::VALUE       => $server[ MemcachedStats::CURR_ITEMS ] ?? 0 ,
-            Prop::UNIT_CODE   => MeasureCode::UNIT ,
-            Prop::UNIT_TEXT   => MeasureName::UNIT ,
-        ]) ;
-    }
-
-    /**
-     * Indicates the total number of set operations.
-     * @param array $server
-     * @return PropertyValue
-     */
-    public function totalSets( array $server ) :PropertyValue
-    {
-        return new PropertyValue
-        ([
-            Prop::NAME        => 'Set operations',
-            Prop::DESCRIPTION => 'Total number of set operations',
-            Prop::VALUE       => $server[ MemcachedStats::CMD_SET ] ?? 0  ,
-            Prop::UNIT_CODE   => MeasureCode::UNIT ,
-            Prop::UNIT_TEXT   => MeasureName::UNIT ,
-        ]) ;
+        $this->assertMemCached();
+        $stats = $this->memcached->getStats();
+        foreach ( $stats as $server )
+        {
+            return $server[ MemcachedStats::UPTIME ] ?? 0;
+        }
+        return 0 ;
     }
 }
 
