@@ -4,6 +4,7 @@
 namespace oihana\memcached\commands;
 
 use Memcached;
+use oihana\memcached\options\MemcachedOption;
 use Throwable;
 
 use DI\Container;
@@ -13,15 +14,17 @@ use DI\NotFoundException;
 use oihana\commands\enums\ExitCode;
 use oihana\commands\Kernel;
 use oihana\commands\options\CommandOption;
+
 use oihana\enums\Char;
-use oihana\enums\Method;
-use oihana\enums\Param;
+
 use oihana\memcached\traits\MemcachedTrait;
 
 use org\schema\creativeWork\Dataset;
 use org\schema\PropertyValue;
+
 use org\unece\uncefact\MeasureCode;
 use org\unece\uncefact\MeasureSymbol;
+
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -100,8 +103,8 @@ class MemcachedCommand extends Kernel
      */
     protected function configure() : void
     {
-        $this->addOption( CommandOption::CLEAR  , 'c' , InputOption::VALUE_NONE , 'Clear the console.' );
-        $this->addOption( Method::flush         , 'f' , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
+        $this->addOption( CommandOption::CLEAR   , 'c' , InputOption::VALUE_NONE , 'Clear the console.' );
+        $this->addOption( MemcachedOption::FLUSH , 'f' , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
     }
 
     /**
@@ -116,7 +119,7 @@ class MemcachedCommand extends Kernel
 
         [ $io , $timestamp ] = $this->startCommand( $input , $output );
 
-        $flush = $input->getOption( Method::flush );
+        $flush = $input->getOption( MemcachedOption::FLUSH );
 
         if ( $flush === true )
         {
@@ -190,8 +193,9 @@ class MemcachedCommand extends Kernel
     public function stats( InputInterface $input , OutputInterface $output ) : int
     {
         $io = $this->getIO( $input , $output );
-        try {
-            $list = $this->memcachedStats( $input->getOption( Param::VERBOSE ) );
+        try
+        {
+            $list = $this->memcachedStats( $input->getOption( MemcachedOption::VERBOSE ) );
             $datas = $list->itemListElement;
 
             /**

@@ -1,11 +1,11 @@
 <?php
 
 use oihana\memcached\commands\MemcachedCommand;
-use oihana\memcached\enums\MemcachedDefinitions as Definitions;
+use oihana\memcached\enums\MemcachedDefinition as Definition;
 
 return
 [
-    Definitions::COMMANDS =>
+    Definition::COMMANDS =>
     [
         MemcachedCommand::NAME ,
     ]

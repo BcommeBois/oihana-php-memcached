@@ -37,11 +37,13 @@
         "php": ">=8.4",
         "ext-memcached" : "*",
         "oihana/php-core": "dev-main",
-        "oihana/php-system": "dev-main",
+        "oihana/php-reflect": "dev-main",
+        "oihana/php-enums": "dev-main",
         "oihana/php-files": "dev-main",
+        "oihana/php-system": "dev-main",
+        "oihana/php-commands": "dev-main",
         "oihana/php-schema": "dev-main",
-        "oihana/php-standards": "dev-main",
-        "oihana/php-commands": "dev-main"
+        "oihana/php-standards": "dev-main"
     },
     "require-dev": {
         "phpunit/phpunit": "^12",

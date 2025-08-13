@@ -2,10 +2,11 @@
 
 use DI\Container;
 
-use oihana\enums\Param;
+use oihana\commands\enums\CommandParam;
+use oihana\enums\aram;
 use oihana\memcached\commands\MemcachedCommand;
 
-use oihana\memcached\enums\MemcachedDefinitions as Definitions;
+use oihana\memcached\enums\MemcachedDefinition as Definition;
 
 // bin/console command:memcached
 // bin/console command:memcached -v
@@ -19,12 +20,12 @@ return
     (
         MemcachedCommand::NAME ,
         $container ,
-        $container->get( Definitions::MEMCACHED ) ,
+        $container->get( Definition::MEMCACHED ) ,
         [
-            Param::DESCRIPTION => 'List and flush memcached.' ,
-            Param::HELP        => 'This command allows manage the memcached tool.' ,
+            CommandParam::DESCRIPTION => 'List and flush memcached.' ,
+            CommandParam::HELP        => 'This command allows manage the memcached tool.' ,
 
-            ...$container->get( Definitions::COMMAND )
+            ...$container->get( Definition::COMMAND )
         ]
     )
 ];

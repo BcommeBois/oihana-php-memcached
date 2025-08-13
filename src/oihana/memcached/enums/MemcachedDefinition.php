@@ -2,7 +2,7 @@
 
 namespace oihana\memcached\enums;
 
-use oihana\reflections\traits\ConstantsTrait;
+use oihana\reflect\traits\ConstantsTrait;
 
 /**
  * Enumeration of memcached command definitions keys.
@@ -11,7 +11,7 @@ use oihana\reflections\traits\ConstantsTrait;
  * @author  Marc Alcaraz (ekameleon)
  * @since   1.0.0
  */
-class MemcachedDefinitions
+class MemcachedDefinition
 {
     use ConstantsTrait ;
 

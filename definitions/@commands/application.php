@@ -5,16 +5,16 @@ use Psr\Container\ContainerInterface ;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
-use oihana\memcached\enums\MemcachedDefinitions as Definitions;
+use oihana\memcached\enums\MemcachedDefinition as Definition;
 
 return
 [
     Application::class => function( ContainerInterface $container ) :Application
     {
         $application = new Application() ;
-        if( $container->has( Definitions::COMMANDS ) )
+        if( $container->has( Definition::COMMANDS ) )
         {
-            $definitions = $container->get( Definitions::COMMANDS ) ;
+            $definitions = $container->get( Definition::COMMANDS ) ;
             if( is_array( $definitions ) && count( $definitions ) > 0 )
             {
                 foreach ( $definitions as $definition )

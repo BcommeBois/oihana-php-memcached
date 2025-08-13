@@ -1,8 +1,8 @@
 <?php
 
-use oihana\memcached\enums\MemcachedDefinitions as Definitions;
+use oihana\memcached\enums\MemcachedDefinition as Definition;
 
 return
 [
-    Definitions::CONFIG_PATH => fn() :string => __CONFIG__
+    Definition::CONFIG_PATH => fn() :string => __CONFIG__
 ];

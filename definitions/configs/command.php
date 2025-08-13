@@ -2,12 +2,12 @@
 
 use Psr\Container\ContainerInterface ;
 
-use oihana\memcached\enums\MemcachedConfig      as Config      ;
-use oihana\memcached\enums\MemcachedDefinitions as Definitions ;
+use oihana\memcached\enums\MemcachedConfig     as Config      ;
+use oihana\memcached\enums\MemcachedDefinition as Definition ;
 
 return
 [
-    Definitions::COMMAND
+    Definition::COMMAND
         => fn( ContainerInterface $container ) :array
-        => $container->get( Definitions::CONFIG )[ Config::COMMAND ] ?? []
+        => $container->get( Definition::CONFIG )[ Config::COMMAND ] ?? []
 ];
