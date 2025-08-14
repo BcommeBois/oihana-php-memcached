@@ -245,17 +245,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BcommeBois/oihana-php-commands.git",
-                "reference": "85a0e1906477bd9ec5b8fbb1178020b2237cde78"
+                "reference": "3886aa84793968099b6fb72ac344212c86175795"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BcommeBois/oihana-php-commands/zipball/85a0e1906477bd9ec5b8fbb1178020b2237cde78",
-                "reference": "85a0e1906477bd9ec5b8fbb1178020b2237cde78",
+                "url": "https://api.github.com/repos/BcommeBois/oihana-php-commands/zipball/3886aa84793968099b6fb72ac344212c86175795",
+                "reference": "3886aa84793968099b6fb72ac344212c86175795",
                 "shasum": ""
             },
             "require": {
                 "oihana/php-core": "dev-main",
                 "oihana/php-enums": "dev-main",
+                "oihana/php-exceptions": "dev-main",
                 "oihana/php-files": "dev-main",
                 "oihana/php-reflect": "dev-main",
                 "oihana/php-schema": "dev-main",
@@ -312,7 +313,7 @@
                 "issues": "https://github.com/BcommeBois/oihana-php-commands/issues",
                 "source": "https://github.com/BcommeBois/oihana-php-commands/tree/main"
             },
-            "time": "2025-08-13T14:59:32+00:00"
+            "time": "2025-08-14T17:33:44+00:00"
         },
         {
             "name": "oihana/php-core",
@@ -452,12 +453,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BcommeBois/oihana-php-enums.git",
-                "reference": "c78329afa86556369f1e2b6159afa9f22ae3a6ff"
+                "reference": "e6b0b091d6672cf6a43d10984d44fcca8b2737e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BcommeBois/oihana-php-enums/zipball/c78329afa86556369f1e2b6159afa9f22ae3a6ff",
-                "reference": "c78329afa86556369f1e2b6159afa9f22ae3a6ff",
+                "url": "https://api.github.com/repos/BcommeBois/oihana-php-enums/zipball/e6b0b091d6672cf6a43d10984d44fcca8b2737e1",
+                "reference": "e6b0b091d6672cf6a43d10984d44fcca8b2737e1",
                 "shasum": ""
             },
             "require": {
@@ -500,9 +501,9 @@
             "support": {
                 "email": "marc@ooop.fr",
                 "issues": "https://github.com/BcommeBois/oihana-php-enums/issues",
-                "source": "https://github.com/BcommeBois/oihana-php-enums/tree/1.0.0"
+                "source": "https://github.com/BcommeBois/oihana-php-enums/tree/main"
             },
-            "time": "2025-08-13T14:11:04+00:00"
+            "time": "2025-08-14T07:11:55+00:00"
         },
         {
             "name": "oihana/php-exceptions",
@@ -566,12 +567,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BcommeBois/oihana-php-files.git",
-                "reference": "e19c341c571d3db33dc98ec1538eda77e31977b6"
+                "reference": "9f50e44f96a5ebede33ce89bdd8fa7f78944fa70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BcommeBois/oihana-php-files/zipball/e19c341c571d3db33dc98ec1538eda77e31977b6",
-                "reference": "e19c341c571d3db33dc98ec1538eda77e31977b6",
+                "url": "https://api.github.com/repos/BcommeBois/oihana-php-files/zipball/9f50e44f96a5ebede33ce89bdd8fa7f78944fa70",
+                "reference": "9f50e44f96a5ebede33ce89bdd8fa7f78944fa70",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +689,7 @@
                 "issues": "https://github.com/BcommeBois/oihana-php-files/issues",
                 "source": "https://github.com/BcommeBois/oihana-php-files/tree/main"
             },
-            "time": "2025-08-13T15:33:43+00:00"
+            "time": "2025-08-14T17:18:10+00:00"
         },
         {
             "name": "oihana/php-reflect",
@@ -696,12 +697,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BcommeBois/oihana-php-reflect.git",
-                "reference": "8da5d4084ad5b0fcbf4638c5f7077e6e9b163cc7"
+                "reference": "b6899e0f4b55fd307939f233e97fe948bf42ff25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BcommeBois/oihana-php-reflect/zipball/8da5d4084ad5b0fcbf4638c5f7077e6e9b163cc7",
-                "reference": "8da5d4084ad5b0fcbf4638c5f7077e6e9b163cc7",
+                "url": "https://api.github.com/repos/BcommeBois/oihana-php-reflect/zipball/b6899e0f4b55fd307939f233e97fe948bf42ff25",
+                "reference": "b6899e0f4b55fd307939f233e97fe948bf42ff25",
                 "shasum": ""
             },
             "require": {
@@ -748,7 +749,7 @@
                 "issues": "https://github.com/BcommeBois/oihana-php-reflect/issues",
                 "source": "https://github.com/BcommeBois/oihana-php-reflect/tree/main"
             },
-            "time": "2025-08-13T14:27:43+00:00"
+            "time": "2025-08-14T09:02:29+00:00"
         },
         {
             "name": "oihana/php-schema",
@@ -871,12 +872,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BcommeBois/oihana-php-system.git",
-                "reference": "479e851e429dc323ed906acebbfa52b52713d7ee"
+                "reference": "749c88abc43677e69907325f42f4a4573d5d7f49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BcommeBois/oihana-php-system/zipball/479e851e429dc323ed906acebbfa52b52713d7ee",
-                "reference": "479e851e429dc323ed906acebbfa52b52713d7ee",
+                "url": "https://api.github.com/repos/BcommeBois/oihana-php-system/zipball/749c88abc43677e69907325f42f4a4573d5d7f49",
+                "reference": "749c88abc43677e69907325f42f4a4573d5d7f49",
                 "shasum": ""
             },
             "require": {
@@ -940,7 +941,7 @@
                 "issues": "https://github.com/BcommeBois/oihana-php-system/issues",
                 "source": "https://github.com/BcommeBois/oihana-php-system/tree/main"
             },
-            "time": "2025-08-13T18:00:20+00:00"
+            "time": "2025-08-14T15:37:19+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -2360,16 +2361,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.6.0",
+            "version": "v5.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                "reference": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2",
+                "reference": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2",
                 "shasum": ""
             },
             "require": {
@@ -2388,7 +2389,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
@@ -2412,9 +2413,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.1"
             },
-            "time": "2025-07-27T20:03:57+00:00"
+            "time": "2025-08-13T20:13:15+00:00"
         },
         {
             "name": "nunomaduro/collision",

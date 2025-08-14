@@ -103,7 +103,7 @@ class MemcachedCommand extends Kernel
      */
     protected function configure() : void
     {
-        $this->addOption( CommandOption::CLEAR   , 'c' , InputOption::VALUE_NONE , 'Clear the console.' );
+        CommandOption::configure( $this ) ;
         $this->addOption( MemcachedOption::FLUSH , 'f' , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
     }
 
@@ -224,10 +224,10 @@ class MemcachedCommand extends Kernel
                     }
 
                     $rows[] =
-                        [
-                            sprintf( '<fg=green>%s</>' , $name ) ,
-                            sprintf( '<options=bold>%s</>' , $value ) ,
-                        ];
+                    [
+                        sprintf( '<fg=green>%s</>' , $name ) ,
+                        sprintf( '<options=bold>%s</>' , $value ) ,
+                    ];
                 }
 
                 $table->setHeaders( $headers )
