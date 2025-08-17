@@ -26,11 +26,14 @@
         "psr-4" :
         {
             "oihana\\" : "src/oihana"
-        }
+        },
+        "files":[
+            "src/oihana/memcached/helpers/cacheCollection.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "oihana\\" : "tests/oihana"
+            "tests\\" : "tests"
         }
     },
     "require": {
@@ -44,7 +47,8 @@
         "oihana/php-system": "dev-main",
         "oihana/php-commands": "dev-main",
         "oihana/php-schema": "dev-main",
-        "oihana/php-standards": "dev-main"
+        "oihana/php-standards": "dev-main",
+        "matthiasmullie/scrapbook": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^12",

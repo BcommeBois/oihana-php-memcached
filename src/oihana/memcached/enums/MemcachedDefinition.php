@@ -15,10 +15,12 @@ class MemcachedDefinition
 {
     use ConstantsTrait ;
 
-    const string APP_PATH    = 'appPath'    ;
-    const string COMMAND     = 'command'    ;
-    const string COMMANDS    = 'commands'   ;
-    const string CONFIG      = 'config'     ;
-    const string CONFIG_PATH = 'configPath' ;
-    const string MEMCACHED   = 'memcached'  ;
+    const string APP_PATH        = 'appPath'         ;
+    const string CACHE_MEMCACHED = 'appPath'         ;
+    const string CACHE_MEMORY    = 'cache:memory'    ;
+    const string COMMAND         = 'cache:memcached' ;
+    const string COMMANDS        = 'commands'        ;
+    const string CONFIG          = 'config'          ;
+    const string CONFIG_PATH     = 'configPath'      ;
+    const string MEMCACHED       = 'memcached'       ;
 }
