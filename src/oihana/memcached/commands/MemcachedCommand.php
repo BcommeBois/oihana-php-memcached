@@ -103,7 +103,7 @@ class MemcachedCommand extends Kernel
      */
     protected function configure() : void
     {
-        CommandOption::configure( $this ) ;
+        CommandOption::configureClear( $this ) ;
         $this->addOption( MemcachedOption::FLUSH , 'f' , InputOption::VALUE_NONE , 'Flush the memcached memory.' );
     }
 
@@ -214,11 +214,13 @@ class MemcachedCommand extends Kernel
                 /**
                  * @var PropertyValue $property
                  */
-                foreach ( $variables as $property ) {
+                foreach ( $variables as $property )
+                {
                     $name = $property->name ?? 'unknown';
                     $value = round( $property->value ?? 0 , 4 );
 
-                    if ( $property->unitCode && $property->unitCode != MeasureCode::UNIT ) {
+                    if ( $property->unitCode && $property->unitCode != MeasureCode::UNIT )
+                    {
                         $unit = MeasureSymbol::getFromCode( $property->unitCode );
                         $value = $value . Char::SPACE . $unit;
                     }
@@ -230,9 +232,7 @@ class MemcachedCommand extends Kernel
                     ];
                 }
 
-                $table->setHeaders( $headers )
-                    ->setRows( $rows )// ->setStyle('markdown' )
-                ;
+                $table->setHeaders( $headers )->setRows( $rows ) ;
 
                 $table->render();
 
