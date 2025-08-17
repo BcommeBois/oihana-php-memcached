@@ -9,6 +9,10 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- oihana\memcached\helpers\cacheCollection -> require matthiasmullie/scrapbook (composer.json)
+
 ---
 
 ## [1.0.2] - 2025-08-12
