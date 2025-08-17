@@ -125,8 +125,8 @@ class MemcachedCommand extends Kernel
         {
             $status = $this->flush( $input , $output );
         }
-
-        else {
+        else
+        {
             $status = $this->stats( $input , $output );
         }
 

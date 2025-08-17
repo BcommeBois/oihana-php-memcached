@@ -11,6 +11,7 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- oihana\memcached\enums\MemcachedAction
 - oihana\memcached\helpers\cacheCollection -> require matthiasmullie/scrapbook (composer.json)
 
 ---
