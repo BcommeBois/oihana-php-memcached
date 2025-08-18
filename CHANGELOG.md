@@ -9,8 +9,15 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+- Nothing for the moment
+
+---
+
+## [1.0.3] - 2025-08-18
+
 ### Added
 
+- oihana\memcached\controllers\MemcachedController
 - oihana\memcached\enums\MemcachedAction
 - oihana\memcached\helpers\cacheCollection -> require matthiasmullie/scrapbook (composer.json)
 
