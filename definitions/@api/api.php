@@ -38,13 +38,15 @@ use oihana\routes\Route;
  *
  * @return array<string,mixed> Array of DI container definitions for
  *                             Memcached controller and routes.
+ *
+ * @see The 'memcached' definition in the 'definitions/cache/memcached.php' file.
  */
 return
 [
     'api:controller:memcached' => fn( Container $container ) => new MemcachedController
     (
         $container ,
-        $container->get( MemcachedDefinition::MEMCACHED )
+        $container->get( MemcachedDefinition::MEMCACHED ) // see definitions/cache/memcached.php
     ) ,
 
     // http://example.com/memcached/flush
