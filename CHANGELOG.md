@@ -9,7 +9,7 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-- Nothing for the moment
+- Fix constants in the MemcachedDefinition enumeration.
 
 ---
 

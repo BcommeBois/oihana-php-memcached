@@ -3,7 +3,6 @@
 use DI\Container;
 
 use oihana\commands\enums\CommandParam;
-use oihana\enums\aram;
 use oihana\memcached\commands\MemcachedCommand;
 
 use oihana\memcached\enums\MemcachedDefinition as Definition;
