@@ -151,7 +151,7 @@ class MemcachedCommand extends Kernel
     {
         $io = $this->getIO( $input , $output );
 
-        $io->section( 'Flush the cache' );
+        $io->section( 'Clear the cache' );
 
         try
         {
@@ -159,14 +159,14 @@ class MemcachedCommand extends Kernel
 
             if ( $code == Memcached::RES_SUCCESS )
             {
-                $io->success( "[✓] Flush operation succeeded" );
+                $io->text( "🚀 The cache has been successfully cleared." );
             }
 
             return $code;
         }
         catch ( Throwable $exception )
         {
-            $io->error( sprintf( '[!] The command failed,  %s' , $exception->getMessage() ) );
+            $io->error( sprintf( '⚡ The command failed,  %s' , $exception->getMessage() ) );
             return ExitCode::FAILURE;
         }
     }
