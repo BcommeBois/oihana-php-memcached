@@ -201,15 +201,16 @@ class MemcachedCommand extends Kernel
             /**
              * @var Dataset $dataSet
              */
-            foreach ( $datas as $dataSet ) {
+            foreach ( $datas as $dataSet )
+            {
                 $io->section( $dataSet->name ?? 'unknown' );
 
                 $variables = $dataSet->variableMeasured ?? [];
 
                 $table = new Table( $output );
 
-                $headers = [ 'Name' , 'Value' ];
-                $rows = [];
+                $headers = [ 'Name' , 'Value' ] ;
+                $rows    = [] ;
 
                 /**
                  * @var PropertyValue $property
