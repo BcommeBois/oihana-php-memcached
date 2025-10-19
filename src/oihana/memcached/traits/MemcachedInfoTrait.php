@@ -2,6 +2,8 @@
 
 namespace oihana\memcached\traits;
 
+use ReflectionException;
+
 use oihana\memcached\enums\MemcachedStats;
 
 use org\schema\constants\Prop;
@@ -52,6 +54,8 @@ trait MemcachedInfoTrait
      * @param float|int $cacheUsed Cache usage percentage.
      * @return PropertyValue PropertyValue describing cache usage.
      *
+     * @throws ReflectionException
+     *
      * @example
      * ```php
      * $cacheUsage = 75.5;
@@ -73,9 +77,13 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the current cache size information.
+     *
      * @param int|float $cacheSize
      * @param int|float $maxCacheSize
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function currentCacheSize( int|float $cacheSize , int|float $maxCacheSize ) :PropertyValue
     {
@@ -92,8 +100,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the number of current connections.
+     *
      * @param array $server
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function currentConnections( array $server ) :PropertyValue
     {
@@ -109,8 +121,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the maximum size of the cache in megabytes.
+     *
      * @param int|float $maxCacheSize
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function maxCacheSize( int|float $maxCacheSize ) :PropertyValue
     {
@@ -126,8 +142,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the total number of connections.
+     *
      * @param array $server
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function totalConnections( array $server ) :PropertyValue
     {
@@ -143,8 +163,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the total number of get operations.
+     *
      * @param array $server
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function totalGets( array $server ) :PropertyValue
     {
@@ -160,8 +184,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the total number of items stored in the cache.
+     *
      * @param array $server
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function totalItems( array $server ) :PropertyValue
     {
@@ -177,8 +205,12 @@ trait MemcachedInfoTrait
 
     /**
      * Indicates the total number of set operations.
+     *
      * @param array $server
+     *
      * @return PropertyValue
+     *
+     * @throws ReflectionException
      */
     public function totalSets( array $server ) :PropertyValue
     {
