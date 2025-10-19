@@ -11,6 +11,8 @@ use MatthiasMullie\Scrapbook\Psr16\SimpleCache;
 
 use oihana\memcached\enums\MemcachedDefinition;
 
+use function oihana\models\helpers\cacheCollection as cache ;
+
 /**
  * Creates a namespaced cache collection from a Memcached store definition
  * registered in the dependency injection container.
@@ -50,13 +52,5 @@ function cacheCollection
 )
 : ?SimpleCache
 {
-    if( $container->has( $definition ) )
-    {
-        $cache = $container->get( $definition ) ;
-        if( $cache instanceof KeyValueStore )
-        {
-            return new SimpleCache( $cache->getCollection( $collection ) ) ;
-        }
-    }
-    return null ;
+    return cache( $container , $collection , $definition ) ;
 }
