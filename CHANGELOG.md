@@ -10,6 +10,7 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 - Fix constants in the MemcachedDefinition enumeration.
+- Fix the MemcacheController class, the fail method use now the $request parameter.
 
 ---
 
