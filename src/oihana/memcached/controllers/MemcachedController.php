@@ -3,9 +3,12 @@
 namespace oihana\memcached\controllers;
 
 use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Memcached;
 
+use oihana\enums\http\HttpStatusCode;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,6 +20,7 @@ use oihana\controllers\enums\Skin;
 use oihana\controllers\traits\prepare\PrepareSkin;
 
 use oihana\memcached\traits\MemcachedTrait;
+use ReflectionException;
 
 /**
  * The memcached controller class.
@@ -29,7 +33,10 @@ class MemcachedController extends Controller
      * @param ?Memcached $memcached The memcached client reference.
      * @param array $init The init object.
      * @throws ContainerExceptionInterface
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
     public function __construct( Container $container , ?Memcached $memcached , array $init = [] )
     {
@@ -58,11 +65,11 @@ class MemcachedController extends Controller
                 return $this->success( $request , $response , true ) ;
             }
 
-            return $this->fail( $response , 500 , $this->memcached->getResultMessage() ) ;
+            return $this->fail( $request , $response , HttpStatusCode::INTERNAL_SERVER_ERROR , $this->memcached->getResultMessage() ) ;
         }
         catch ( Exception $e )
         {
-            return $this->fail( $response , 500 , $e->getMessage() ) ;
+            return $this->fail( $request , $response , HttpStatusCode::INTERNAL_SERVER_ERROR , $e->getMessage() ) ;
         }
     }
 
@@ -83,7 +90,7 @@ class MemcachedController extends Controller
         }
         catch ( Exception $e )
         {
-            return $this->fail( $response , 500 , $e->getMessage() ) ;
+            return $this->fail( $request , $response , HttpStatusCode::INTERNAL_SERVER_ERROR , $e->getMessage() ) ;
         }
     }
 }
