@@ -40,7 +40,6 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - memcachedSet
   - memcachedTouch
   - memcachedUptime
- 
 
 ## [1.0.0] - 2025-08-11
 
