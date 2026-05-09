@@ -28,7 +28,8 @@
             "oihana\\" : "src/oihana"
         },
         "files":[
-            "src/oihana/memcached/helpers/cacheCollection.php"
+            "src/oihana/memcached/helpers/cacheCollection.php" ,
+            "src/oihana/memcached/helpers/getMemcached.php"
         ]
     },
     "autoload-dev": {

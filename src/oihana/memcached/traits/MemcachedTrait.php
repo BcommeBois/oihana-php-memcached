@@ -3,7 +3,13 @@
 namespace oihana\memcached\traits;
 
 use Memcached;
+
+use ReflectionException;
 use UnexpectedValueException;
+
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 use oihana\memcached\enums\MemcachedStats;
 
@@ -12,6 +18,7 @@ use org\schema\creativeWork\Dataset;
 use org\schema\ItemList;
 
 use function oihana\core\maths\roundValue;
+use function oihana\memcached\helpers\getMemcached;
 
 /**
  * The memcached trait helper.
@@ -65,6 +72,11 @@ trait MemcachedTrait
     use MemcachedInfoTrait ;
 
     /**
+     * Initialization key for the Memcached client dependency.
+     */
+    public const string MEMCACHED = 'memcached' ;
+
+    /**
      * The memcached client reference.
      * @var Memcached|null
      */
@@ -83,6 +95,28 @@ trait MemcachedTrait
         {
             throw new UnexpectedValueException( 'The memcached property is not set.' ) ;
         }
+    }
+
+    /**
+     * Initializes the Memcached client dependency from the $init array.
+     *
+     * Mirrors the canonical $init / $container pattern used across the
+     * Oihana stack (see {@see getDocuments}, {@see getEdges},
+     * {@see getZitadelClient}). Accepts a {@see Memcached} instance
+     * directly, a service ID resolvable via the container, or an array
+     * carrying one of those under {@see self::MEMCACHED}. Falls back to
+     * `null` when nothing matches — consumers must guard with
+     * `if( $this->memcached )`.
+     *
+     * @param array $init The initialization array.
+     * @param ContainerInterface|null $container The PSR-11 container.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function initializeMemcached( array $init , ?ContainerInterface $container ) :void
+    {
+        $this->memcached = getMemcached( $init , $container , self::MEMCACHED ) ;
     }
 
     /**
@@ -285,7 +319,7 @@ trait MemcachedTrait
      *
      * @return ItemList Returns an ItemList object containing cache statistics.
      *
-     * @throws UnexpectedValueException If the memcached property is not set.
+     * @throws ReflectionException
      *
      * @example
      * ```php

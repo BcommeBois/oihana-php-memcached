@@ -7,7 +7,19 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [Unreleased]
+## [1.0.4] - 2026-05-09
+
+### Added
+
+- Adds the `oihana\memcached\helpers\getMemcached` helper to resolve a `Memcached` instance from a direct instance, an init array, or a PSR-11 container service id.
+- Adds the `oihana\memcached\traits\MemcachedTrait::initializeMemcached` method to wire the `Memcached` dependency from an init array / container, following the canonical Oihana `$init` / `$container` pattern.
+- Adds unit tests for the `getMemcached` helper and the `MemcachedTrait::initializeMemcached` method.
+
+### Changed
+
+- `MemcachedTrait::initializeMemcached` now accepts a PSR-11 `ContainerInterface` instead of being tied to `DI\Container`.
+
+### Fixed
 
 - Fix constants in the MemcachedDefinition enumeration.
 - Fix the MemcacheController class, the fail method use now the $request parameter.
