@@ -87,7 +87,7 @@ class MemcachedCommand extends Kernel
     )
     {
         parent::__construct( $name , $container , $init );
-        $this->memcached = $memcached;
+        $this->memcached = $memcached ;
     }
 
     use MemcachedTrait;

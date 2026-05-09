@@ -7,6 +7,21 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.5] - 2026-05-09
+
+### Added
+
+- Adds the lightweight `oihana\memcached\traits\MemcachedInitTrait` for classes that only need to hold and initialize a `Memcached` client without the full CRUD / stats surface.
+- Adds a unit test covering the fluent return of `MemcachedInitTrait::initializeMemcached()`.
+
+### Changed
+
+- Extracts the `MEMCACHED` const, the `$memcached` property, `initializeMemcached()` and `assertMemCached()` from `MemcachedTrait` into the new `MemcachedInitTrait`. `MemcachedTrait` now composes `MemcachedInitTrait` and `MemcachedInfoTrait` — public API unchanged.
+- `MemcachedInitTrait::initializeMemcached()` now returns `static` to allow fluent chaining (`return $this`).
+- Enriches the PHPDoc of `MemcachedTrait`, `MemcachedInfoTrait` and `MemcachedInitTrait`: composition notes, canonical `$init` / `$container` examples, and per-method documentation of the `MemcachedStats` keys consumed and units returned.
+
+---
+
 ## [1.0.4] - 2026-05-09
 
 ### Added

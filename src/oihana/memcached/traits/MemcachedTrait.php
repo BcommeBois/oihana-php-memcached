@@ -7,10 +7,6 @@ use Memcached;
 use ReflectionException;
 use UnexpectedValueException;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-
 use oihana\memcached\enums\MemcachedStats;
 
 use org\schema\constants\Prop;
@@ -18,19 +14,37 @@ use org\schema\creativeWork\Dataset;
 use org\schema\ItemList;
 
 use function oihana\core\maths\roundValue;
-use function oihana\memcached\helpers\getMemcached;
 
 /**
- * The memcached trait helper.
+ * Full-featured Memcached helper trait.
  *
- * This trait provides convenient methods to interact with a Memcached client,
- * including flushing the cache and retrieving detailed cache statistics.
+ * Provides a complete API around a {@see Memcached} client: CRUD operations
+ * ({@see self::memcachedGet()}, {@see self::memcachedSet()},
+ * {@see self::memcachedDelete()}, etc.), administrative actions
+ * ({@see self::memcachedFlush()}, {@see self::memcachedTouch()}), and
+ * structured statistics ({@see self::memcachedStats()},
+ * {@see self::memcachedHitRatio()}, {@see self::memcachedUptime()}).
+ *
+ * Composition:
+ * - {@see MemcachedInitTrait} — exposes the {@see self::$memcached} property,
+ *   the {@see self::MEMCACHED} key, {@see self::initializeMemcached()} and
+ *   {@see self::assertMemCached()}.
+ * - {@see MemcachedInfoTrait} — turns raw stats arrays into Schema.org
+ *   `PropertyValue` objects used by {@see self::memcachedStats()}.
+ *
+ * Use this trait when you need the full surface. If you only need to *carry*
+ * a Memcached client (and dispatch the calls yourself), prefer the lighter
+ * {@see MemcachedInitTrait} on its own — never apply both at the same time.
+ *
+ * Every CRUD / stats method calls {@see self::assertMemCached()} first, so a
+ * missing `$memcached` fails fast with a descriptive
+ * {@see UnexpectedValueException}.
  *
  * @package oihana\memcached\traits
  * @author  Marc Alcaraz (ekameleon)
  * @since   1.0.0
  *
- * @example
+ * @example Direct wiring
  * ```php
  * use oihana\memcached\traits\MemcachedTrait;
  * use Memcached;
@@ -40,84 +54,49 @@ use function oihana\memcached\helpers\getMemcached;
  *     use MemcachedTrait;
  *
  *     public function __construct( string $host = 'localhost' , int $port = 11211 )
- * {
- *         $this->memcached = new Memcached();
- *         $this->memcached->addServer( $host , $port ) ;
+ *     {
+ *         $client = new Memcached() ;
+ *         $client->addServer( $host , $port ) ;
+ *
+ *         $this->initializeMemcached( [ self::MEMCACHED => $client ] , null ) ;
  *     }
  * }
  *
- * $cache = new CacheManager();
+ * $cache = new CacheManager() ;
  *
- * // Flush cache and check result code
- * $resultCode = $cache->memcachedFlush();
- * echo "Flush result code: " . $resultCode . PHP_EOL;
+ * $cache->memcachedSet( 'user:42' , [ 'name' => 'Alice' ] , 3600 ) ;
+ * $user = $cache->memcachedGet( 'user:42' ) ;
+ * ```
  *
- * // Get basic cache stats (non verbose)
- * $statsList = $cache->memcachedStats();
- * foreach ($statsList->itemListElement as $dataset)
+ * @example Wiring from a PSR-11 container
+ * ```php
+ * use DI\Container;
+ * use oihana\memcached\traits\MemcachedTrait;
+ *
+ * class CacheManager
  * {
- *     echo $dataset->{Prop::NAME} . PHP_EOL;
+ *     use MemcachedTrait;
+ *
+ *     public function __construct( Container $container , array $init = [] )
+ *     {
+ *         $this->initializeMemcached( $init , $container ) ;
+ *     }
  * }
  *
- * // Get verbose cache stats
- * $verboseStatsList = $cache->memcachedStats(true);
- * foreach ($verboseStatsList->itemListElement as $dataset)
+ * // The 'cache.memcached' service id is resolved from the container:
+ * $cache = new CacheManager( $container , [ CacheManager::MEMCACHED => 'cache.memcached' ] ) ;
+ *
+ * // Inspect basic cache stats:
+ * foreach ( $cache->memcachedStats()->itemListElement as $dataset )
  * {
- *     echo $dataset->{Prop::NAME} . PHP_EOL;
+ *     echo $dataset->{Prop::NAME} . PHP_EOL ;
  * }
  * ```
  */
 trait MemcachedTrait
 {
-    use MemcachedInfoTrait ;
-
-    /**
-     * Initialization key for the Memcached client dependency.
-     */
-    public const string MEMCACHED = 'memcached' ;
-
-    /**
-     * The memcached client reference.
-     * @var Memcached|null
-     */
-    public ?Memcached $memcached = null ;
-
-    /**
-     * Assert the existence of the memcached property.
-     *
-     * @return void
-     *
-     * @throws UnexpectedValueException If the memcached property is not set.
-     */
-    protected function assertMemCached():void
-    {
-        if( !isset( $this->memcached ) )
-        {
-            throw new UnexpectedValueException( 'The memcached property is not set.' ) ;
-        }
-    }
-
-    /**
-     * Initializes the Memcached client dependency from the $init array.
-     *
-     * Mirrors the canonical $init / $container pattern used across the
-     * Oihana stack (see {@see getDocuments}, {@see getEdges},
-     * {@see getZitadelClient}). Accepts a {@see Memcached} instance
-     * directly, a service ID resolvable via the container, or an array
-     * carrying one of those under {@see self::MEMCACHED}. Falls back to
-     * `null` when nothing matches — consumers must guard with
-     * `if( $this->memcached )`.
-     *
-     * @param array $init The initialization array.
-     * @param ContainerInterface|null $container The PSR-11 container.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function initializeMemcached( array $init , ?ContainerInterface $container ) :void
-    {
-        $this->memcached = getMemcached( $init , $container , self::MEMCACHED ) ;
-    }
+    use MemcachedInfoTrait ,
+        MemcachedInitTrait ;
 
     /**
      * Flush the entire memcached cache.

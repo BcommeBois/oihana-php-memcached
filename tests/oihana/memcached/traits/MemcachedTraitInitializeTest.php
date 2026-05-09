@@ -113,6 +113,26 @@ class MemcachedTraitInitializeTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
+    public function testReturnsSelfForFluentChaining() :void
+    {
+        $fixture = new MemcachedInitFixture() ;
+
+        $this->assertSame( $fixture , $fixture->initializeMemcached( [] , null ) ) ;
+        $this->assertSame
+        (
+            $fixture ,
+            $fixture->initializeMemcached
+            (
+                [ MemcachedInitFixture::MEMCACHED => new Memcached() ] ,
+                null
+            )
+        ) ;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testIgnoresContainerWhenInitArrayCarriesInstanceDirectly() :void
     {
         $fixture   = new MemcachedInitFixture() ;

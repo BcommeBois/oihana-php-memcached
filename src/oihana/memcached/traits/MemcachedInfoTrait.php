@@ -13,16 +13,26 @@ use org\unece\uncefact\MeasureCode;
 use org\unece\uncefact\MeasureName;
 
 /**
- * Provides helper methods to generate detailed Memcached statistics as Schema.org `PropertyValue` objects.
+ * Builds Schema.org `PropertyValue` objects from raw Memcached server stats.
  *
- * This trait focuses on transforming raw Memcached server statistics into
- * structured, semantic data, using constants from `MemcachedStats` and measurement codes
- * from the UN/CEFACT specification. Each method returns a `PropertyValue`
- * describing a specific cache metric, such as usage percentage, memory size,
- * number of connections, or total operations performed.
+ * Each method maps a single cache metric (used percentage, current/max memory
+ * size, current/total connections, items, total gets/sets) to a typed
+ * {@see PropertyValue}, populated with:
+ * - `Prop::NAME` / `Prop::DESCRIPTION` — human-readable label and description;
+ * - `Prop::VALUE` — the numeric value pulled from the stats array (or
+ *   computed beforehand for {@see self::cacheUsed()} and
+ *   {@see self::currentCacheSize()});
+ * - `Prop::UNIT_CODE` / `Prop::UNIT_TEXT` — UN/CEFACT measurement code and
+ *   label (`%`, `MB`, `unit`).
  *
- * Designed to be used inside classes that already have access to Memcached server stats
- * (e.g., via `$memcached->getStats()`), this trait does **not** establish a Memcached connection itself.
+ * The trait does **not** open a Memcached connection nor call `getStats()`
+ * itself — callers pass either a pre-extracted scalar (cache-used %, MB
+ * sizes) or a single `$server` array as returned by
+ * `Memcached::getStats()` per server entry. {@see MemcachedTrait::memcachedStats()}
+ * is the canonical consumer.
+ *
+ * Stats array keys are read via the {@see MemcachedStats} enum constants
+ * (e.g. {@see MemcachedStats::CURR_CONNECTIONS}). Missing keys default to `0`.
  *
  * @package oihana\memcached\traits
  * @since   1.0.0
@@ -30,18 +40,22 @@ use org\unece\uncefact\MeasureName;
  * @example
  * ```php
  * use oihana\memcached\traits\MemcachedInfoTrait;
+ * use org\schema\constants\Prop;
  *
  * class CacheInspector
  * {
  *     use MemcachedInfoTrait;
  *
- *     public function displayInfo(array $serverStats): void
+ *     public function displayInfo( array $serverStats ) : void
  *     {
- *         $cacheUsedProp = $this->cacheUsed(75.5);
- *         echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%';
+ *         $cacheUsedProp = $this->cacheUsed( 75.5 ) ;
+ *         echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%' . PHP_EOL ;
  *
- *         $currentSizeProp = $this->currentCacheSize(50.25, 128);
- *         echo $currentSizeProp->{Prop::DESCRIPTION} . ': ' . $currentSizeProp->{Prop::VALUE} . 'MB';
+ *         $currentSizeProp = $this->currentCacheSize( 50.25 , 128 ) ;
+ *         echo $currentSizeProp->{Prop::DESCRIPTION} . ': ' . $currentSizeProp->{Prop::VALUE} . 'MB' . PHP_EOL ;
+ *
+ *         $totalItemsProp = $this->totalItems( $serverStats ) ;
+ *         echo $totalItemsProp->{Prop::NAME} . ': ' . $totalItemsProp->{Prop::VALUE} . PHP_EOL ;
  *     }
  * }
  * ```
@@ -49,18 +63,18 @@ use org\unece\uncefact\MeasureName;
 trait MemcachedInfoTrait
 {
     /**
-     * Indicates the cache used information.
+     * Builds a `PropertyValue` describing the cache usage as a percentage.
      *
-     * @param float|int $cacheUsed Cache usage percentage.
-     * @return PropertyValue PropertyValue describing cache usage.
+     * @param float|int $cacheUsed Cache usage, expressed as a percentage (0–100).
+     *
+     * @return PropertyValue Named "Cache used", carrying `$cacheUsed` with unit `%`.
      *
      * @throws ReflectionException
      *
      * @example
      * ```php
-     * $cacheUsage = 75.5;
-     * $cacheUsedProp = $cacheManager->cacheUsed($cacheUsage);
-     * echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%';
+     * $cacheUsedProp = $cacheManager->cacheUsed( 75.5 ) ;
+     * echo $cacheUsedProp->{Prop::NAME} . ': ' . $cacheUsedProp->{Prop::VALUE} . '%' ;
      * ```
      */
     public function cacheUsed( float|int $cacheUsed ) :PropertyValue
@@ -76,12 +90,13 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the current cache size information.
+     * Builds a `PropertyValue` describing the current cache size in megabytes.
      *
-     * @param int|float $cacheSize
-     * @param int|float $maxCacheSize
+     * @param int|float $cacheSize    Current cache size, in megabytes.
+     * @param int|float $maxCacheSize Maximum cache size in megabytes, exposed
+     *                                via `Prop::MAX_VALUE` for context.
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Current cache size", with unit `MB`.
      *
      * @throws ReflectionException
      */
@@ -99,11 +114,15 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the number of current connections.
+     * Builds a `PropertyValue` describing the number of currently open
+     * connections to the Memcached server.
      *
-     * @param array $server
+     * @param array $server Single-server stats array as returned by
+     *                      `Memcached::getStats()`. Read key:
+     *                      {@see MemcachedStats::CURR_CONNECTIONS}
+     *                      (defaults to `0` if missing).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Current connections", unit `unit`.
      *
      * @throws ReflectionException
      */
@@ -120,11 +139,12 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the maximum size of the cache in megabytes.
+     * Builds a `PropertyValue` describing the maximum cache size in megabytes.
      *
-     * @param int|float $maxCacheSize
+     * @param int|float $maxCacheSize Maximum cache size, in megabytes (typically
+     *                                derived from {@see MemcachedStats::LIMIT_MAX_BYTES}).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Maximum cache size", with unit `MB`.
      *
      * @throws ReflectionException
      */
@@ -141,11 +161,15 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the total number of connections.
+     * Builds a `PropertyValue` describing the total number of connections
+     * the server has accepted since startup.
      *
-     * @param array $server
+     * @param array $server Single-server stats array as returned by
+     *                      `Memcached::getStats()`. Read key:
+     *                      {@see MemcachedStats::TOTAL_CONNECTIONS}
+     *                      (defaults to `0` if missing).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Total connections", unit `unit`.
      *
      * @throws ReflectionException
      */
@@ -162,11 +186,15 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the total number of get operations.
+     * Builds a `PropertyValue` describing the cumulative number of `get`
+     * operations issued to the server since startup.
      *
-     * @param array $server
+     * @param array $server Single-server stats array as returned by
+     *                      `Memcached::getStats()`. Read key:
+     *                      {@see MemcachedStats::CMD_GET}
+     *                      (defaults to `0` if missing).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Get operations", unit `unit`.
      *
      * @throws ReflectionException
      */
@@ -183,11 +211,15 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the total number of items stored in the cache.
+     * Builds a `PropertyValue` describing the number of items currently
+     * stored in the cache.
      *
-     * @param array $server
+     * @param array $server Single-server stats array as returned by
+     *                      `Memcached::getStats()`. Read key:
+     *                      {@see MemcachedStats::CURR_ITEMS}
+     *                      (defaults to `0` if missing).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Total items", unit `unit`.
      *
      * @throws ReflectionException
      */
@@ -204,11 +236,15 @@ trait MemcachedInfoTrait
     }
 
     /**
-     * Indicates the total number of set operations.
+     * Builds a `PropertyValue` describing the cumulative number of `set`
+     * operations issued to the server since startup.
      *
-     * @param array $server
+     * @param array $server Single-server stats array as returned by
+     *                      `Memcached::getStats()`. Read key:
+     *                      {@see MemcachedStats::CMD_SET}
+     *                      (defaults to `0` if missing).
      *
-     * @return PropertyValue
+     * @return PropertyValue Named "Set operations", unit `unit`.
      *
      * @throws ReflectionException
      */
