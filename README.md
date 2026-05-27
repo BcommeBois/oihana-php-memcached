@@ -134,6 +134,41 @@ composer memcache -- -f
 composer memcache -- --flush 
 ```
 
+## 🚦 Rate limiting
+
+`oihana/php-memcached` ships `MemcachedRateLimitStore` — a production-grade implementation of the `RateLimitStore` interface defined by [`oihana/php-middleware`](https://github.com/BcommeBois/oihana-php-middleware). It backs the `enforceRateLimit()` helper with a Memcached-shared counter, so the rate-limit decision stays consistent across every PHP worker / process / node pointing at the same Memcached instance.
+
+```php
+use Memcached ;
+
+use oihana\memcached\rateLimit\MemcachedRateLimitStore ;
+use oihana\middleware\enums\RateLimitOption ;
+
+use function oihana\middleware\helpers\rateLimit\enforceRateLimit ;
+use function oihana\middleware\helpers\rateLimit\withRateLimitHeaders ;
+
+$memcached = new Memcached() ;
+$memcached->addServer( 'localhost' , 11211 ) ;
+
+$store = new MemcachedRateLimitStore( [ MemcachedRateLimitStore::MEMCACHED => $memcached ] ) ;
+
+$decision = enforceRateLimit( $request , $store ,
+[
+    RateLimitOption::LIMIT  => 60 ,
+    RateLimitOption::WINDOW => 60 ,
+    RateLimitOption::SCOPE  => 'auth' ,
+]) ;
+
+if ( !$decision->allowed )
+{
+    return withRateLimitHeaders( $responseFactory->createResponse( 429 ) , $decision ) ;
+}
+
+return withRateLimitHeaders( $handler->handle( $request ) , $decision ) ;
+```
+
+The store uses the canonical Memcached counter pattern — `increment` first, fall back to `add` then re-`increment` on race — atomic on the default ASCII protocol, single round-trip in the steady state. The TTL is anchored on the first request of a window and never extended on subsequent increments. See the [`oihana/php-middleware` rate-limiting wiki](https://github.com/BcommeBois/oihana-php-middleware/blob/main/wiki/en/rate-limiting.md) for the full helper and option reference.
+
 ## ✅ Running Unit Tests
 
 To run all tests:

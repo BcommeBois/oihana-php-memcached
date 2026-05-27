@@ -1,8 +1,8 @@
 {
     "name" : "oihana/php-memcached" ,
     "type" : "library" ,
-    "description" : "The Oihana PHP memcached library" ,
-    "keywords" : [ "php" , "memcached" , "command" , "console" ] ,
+    "description" : "The Oihana PHP memcached library — Memcached CRUD wrapper, console commands, PSR-16 cache via Scrapbook, and a production-grade RateLimitStore for oihana/php-middleware." ,
+    "keywords" : [ "php" , "memcached" , "command" , "console" , "rate-limit" , "rate-limiting" , "psr-7" , "middleware" ] ,
     "homepage" : "https://github.com/BcommeBois/oihana-php-memcached" ,
     "license" : "MPL-2.0" ,
     "authors" : [
@@ -50,6 +50,7 @@
         "oihana/php-schema": "dev-main",
         "oihana/php-signals": "dev-main",
         "oihana/php-standards": "dev-main",
+        "oihana/php-middleware": "dev-main",
         "matthiasmullie/scrapbook": "^1.5"
     },
     "require-dev": {
@@ -58,6 +59,8 @@
         "mikey179/vfsstream": "^1.6",
         "phpdocumentor/shim": "^3.8"
     },
+    "minimum-stability" : "dev" ,
+    "prefer-stable" : true ,
     "config": {
         "allow-plugins": {
             "phpdocumentor/shim": true
