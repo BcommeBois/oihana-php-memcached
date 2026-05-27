@@ -7,16 +7,18 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [Unreleased]
+## [1.1.0] - 2026-05-27
 
 ### Added
 
 - Adds the `oihana\memcached\rateLimit\MemcachedRateLimitStore` class — production-grade implementation of the `oihana\middleware\rateLimit\RateLimitStore` interface (shipped by `oihana/php-middleware` v0.3+). Backs the `enforceRateLimit()` helper with a Memcached-shared counter, so the rate-limit decision is consistent across every PHP worker / process / node that points at the same Memcached instance. Composes `MemcachedInitTrait` for canonical `$init` / `$container` wiring. Uses the canonical Memcached counter pattern (`increment` first, fall back to `add` then re-`increment` on race) — atomic on the default ASCII protocol, single round-trip in the steady state, anchors TTL on the first request without ever extending it on subsequent increments. Resilient to Memcached eviction (an evicted counter restarts the window, which is the correct behaviour).
 - Adds 10 PHPUnit tests covering the constructor (direct instance, missing-instance guard, container resolution) and the `increment()` contract (steady-state, init with TTL, add-race fallback, defensive fallback when the second increment also fails, TTL never extended on subsequent calls, key segregation).
+- Adds a `## 🚦 Rate limiting` section to the README with a complete Slim-middleware wiring example.
 
 ### Changed
 
 - Adds `oihana/php-middleware: dev-main` to `require` so the package can implement the `RateLimitStore` interface directly. Bumps the package description to mention the new rate-limit store and adds `rate-limit`, `rate-limiting`, `psr-7`, `middleware` to the keywords.
+- Adds `minimum-stability: dev` and `prefer-stable: true` to `composer.json` so Composer can resolve the `dev-main` inter-deps oihana convention cleanly.
 
 ---
 
