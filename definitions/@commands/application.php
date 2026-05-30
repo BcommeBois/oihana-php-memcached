@@ -24,7 +24,7 @@ return
                         $command = $container->get( $definition ) ;
                         if( $command instanceof Command )
                         {
-                            $application->add( $command );
+                            $application->addCommand( $command );
                         }
                     }
                 }
