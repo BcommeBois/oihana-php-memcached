@@ -7,6 +7,12 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- Dependencies: replaced `oihana/php-system` with the focused packages actually consumed — `oihana/php-controllers`, `oihana/php-routes`, `oihana/php-init` and `oihana/php-models` (namespaces `oihana\controllers`, `oihana\routes`, `oihana\init`, `oihana\models`). Drops the heavy Slim/Twig/Symfony stack that `php-system` pulled in. No code or public-API change.
+
 ## [1.1.0] - 2026-05-27
 
 ### Added
