@@ -13,7 +13,7 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Coverage tooling: composer `coverage` and `coverage:md` scripts plus `tools/clover-to-markdown.php` (PHPUnit Clover → Markdown summary under `build/coverage/`), matching the other `oihana/php-*` libraries. The `coverage` script runs the full suite via `phpunit-integration.xml` (unit + live-server integration), so the reported figure reflects a real run; without a local Memcached the integration tests are skipped and the run stays green.
 - Continuous integration: GitHub Actions `ci.yml` (installs `libmemcached` for `ext-memcached`, composer validate + PHPUnit on PHP 8.4) and `docs.yml` (phpDocumentor build + GitHub Pages deploy) workflows.
-- Live-server integration suite (group `integration`, excluded from the default `phpunit.xml` run): `IntegrationTestCase` resolves the server from the `[memcached]` section of the TOML config via `initConfig` (skipping every test when the server is unreachable), and `MemcachedTraitIntegrationTest` exercises the full `MemcachedTrait` surface (CRUD, increment/decrement, touch, flush, hit-ratio, uptime, basic/verbose stats) against a real Memcached. Run via `vendor/bin/phpunit -c phpunit-integration.xml`. Raises line coverage from 7.95% to ~53%, with `MemcachedInfoTrait`, `MemcachedInitTrait`, `MemcachedRateLimitStore` and the helpers now at 100%.
+- Live-server integration suite (group `integration`, excluded from the default `phpunit.xml` run, run via `vendor/bin/phpunit -c phpunit-integration.xml`): `IntegrationTestCase` resolves the server from the `[memcached]` section of the TOML config via `initConfig` and skips every test when it is unreachable. `MemcachedTraitIntegrationTest` exercises the full `MemcachedTrait` surface (CRUD, increment/decrement, touch, flush, hit-ratio, uptime, basic/verbose stats) against a real Memcached; `MemcachedCommandIntegrationTest` drives `MemcachedCommand` through the real DI container (booted like `bin/console`) and a Symfony `CommandTester`, including the defensive failure paths via an injected throwing client. Together with unit tests for `MemcachedStats` and for the empty-stats fall-backs of `memcachedHitRatio()` / `memcachedUptime()`, this raises line coverage from 7.95% to **100%** (250/250). The host-only `MemcachedController` — which needs a fully wired Slim application — is `@codeCoverageIgnore`d, being exercised by consuming projects.
 
 ### Changed
 
@@ -23,6 +23,7 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - `MemcachedTraitInitializeTest`: target the real `MemcachedTrait` via `#[CoversTrait]` instead of `#[CoversClass]` on the test fixture, removing the 7 “not a valid target for code coverage” warnings that made `composer coverage` fail under `failOnWarning`.
+- `composer doc`: add the missing `phpdoc.xml` configuration — the script (and the Docs workflow it backs) aborted in `XmlUtils::loadFile` because the config file was never committed.
 
 ## [1.1.0] - 2026-05-27
 

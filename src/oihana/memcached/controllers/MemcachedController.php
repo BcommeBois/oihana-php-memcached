@@ -24,6 +24,13 @@ use ReflectionException;
 
 /**
  * The memcached controller class.
+ *
+ * Host-application glue: it extends the Slim/PSR-7 `Controller` from `oihana/php-controllers`,
+ * which requires a fully wired Slim application (response factory, router, `app` reference).
+ * That environment only exists in a consuming project, so the controller is exercised there rather than in this
+ * library's isolated suite — hence it is excluded from coverage here.
+ *
+ * @codeCoverageIgnore
  */
 class MemcachedController extends Controller
 {
