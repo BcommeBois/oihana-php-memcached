@@ -6,7 +6,7 @@ use Memcached;
 
 use oihana\memcached\traits\MemcachedTrait;
 
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ class MemcachedInitFixture
     use MemcachedTrait { initializeMemcached as public ; }
 }
 
-#[CoversClass( MemcachedInitFixture::class )]
+#[CoversTrait( MemcachedTrait::class )]
 #[RequiresPhpExtension( 'memcached' )]
 class MemcachedTraitInitializeTest extends TestCase
 {

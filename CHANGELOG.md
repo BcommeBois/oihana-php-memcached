@@ -9,9 +9,19 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Coverage tooling: composer `coverage` and `coverage:md` scripts plus `tools/clover-to-markdown.php` (PHPUnit Clover → Markdown summary under `build/coverage/`), matching the other `oihana/php-*` libraries. Line coverage is 7.95% — most of the library exercises a live Memcached server, which the unit suite does not require.
+- Continuous integration: GitHub Actions `ci.yml` (installs `libmemcached` for `ext-memcached`, composer validate + PHPUnit on PHP 8.4) and `docs.yml` (phpDocumentor build + GitHub Pages deploy) workflows.
+
 ### Changed
 
 - Dependencies: replaced `oihana/php-system` with the focused packages actually consumed — `oihana/php-controllers`, `oihana/php-routes`, `oihana/php-init` and `oihana/php-models` (namespaces `oihana\controllers`, `oihana\routes`, `oihana\init`, `oihana\models`). Drops the heavy Slim/Twig/Symfony stack that `php-system` pulled in. No code or public-API change.
+- `.gitignore`/docs: the two generated logo files under `docs/` are no longer tracked (the `docs/` output is rebuilt and deployed to GitHub Pages by the Docs workflow).
+
+### Fixed
+
+- `MemcachedTraitInitializeTest`: target the real `MemcachedTrait` via `#[CoversTrait]` instead of `#[CoversClass]` on the test fixture, removing the 7 “not a valid target for code coverage” warnings that made `composer coverage` fail under `failOnWarning`.
 
 ## [1.1.0] - 2026-05-27
 
