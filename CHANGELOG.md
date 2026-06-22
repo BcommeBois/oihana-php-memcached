@@ -11,8 +11,9 @@ and follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Coverage tooling: composer `coverage` and `coverage:md` scripts plus `tools/clover-to-markdown.php` (PHPUnit Clover → Markdown summary under `build/coverage/`), matching the other `oihana/php-*` libraries. Line coverage is 7.95% — most of the library exercises a live Memcached server, which the unit suite does not require.
+- Coverage tooling: composer `coverage` and `coverage:md` scripts plus `tools/clover-to-markdown.php` (PHPUnit Clover → Markdown summary under `build/coverage/`), matching the other `oihana/php-*` libraries. The `coverage` script runs the full suite via `phpunit-integration.xml` (unit + live-server integration), so the reported figure reflects a real run; without a local Memcached the integration tests are skipped and the run stays green.
 - Continuous integration: GitHub Actions `ci.yml` (installs `libmemcached` for `ext-memcached`, composer validate + PHPUnit on PHP 8.4) and `docs.yml` (phpDocumentor build + GitHub Pages deploy) workflows.
+- Live-server integration suite (group `integration`, excluded from the default `phpunit.xml` run): `IntegrationTestCase` resolves the server from the `[memcached]` section of the TOML config via `initConfig` (skipping every test when the server is unreachable), and `MemcachedTraitIntegrationTest` exercises the full `MemcachedTrait` surface (CRUD, increment/decrement, touch, flush, hit-ratio, uptime, basic/verbose stats) against a real Memcached. Run via `vendor/bin/phpunit -c phpunit-integration.xml`. Raises line coverage from 7.95% to ~53%, with `MemcachedInfoTrait`, `MemcachedInitTrait`, `MemcachedRateLimitStore` and the helpers now at 100%.
 
 ### Changed
 

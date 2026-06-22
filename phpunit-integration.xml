@@ -19,7 +19,7 @@
     failOnEmptyTestSuite="true"
     failOnIncomplete="true"
     failOnRisky="true"
-    failOnSkipped="true"
+    failOnSkipped="false"
     failOnWarning="true"
     processIsolation="false"
     testdox="true"
@@ -29,13 +29,6 @@
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
-
-    <!-- Live-server integration tests run only via phpunit-integration.xml. -->
-    <groups>
-        <exclude>
-            <group>integration</group>
-        </exclude>
-    </groups>
 
     <source>
         <include>
